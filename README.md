@@ -1,45 +1,87 @@
-# IISSI-2 IS: Examen Tercera Convocatoria
+# IISSI-2 IS: Examen de laboratorio Julio 2024. 
+
+## Actuaciones en directo. Enunciado
+
+Una vez se ha puesto en marcha la primera versión de DeliverUS, los inversores han solicitado la inclusión de una nueva funcionalidad que consiste en ofrecer a los propietarios la posibilidad de registrar actuaciones musicales en directo para darle publicidad. 
+
+* En la pantalla "Restaurants" aparecerá un nuevo botón "Nueva actuación" que lleva al formulación de creación de actuación. Si queda menos de una semana para alguna actuación, aparecerá el aviso "¡Próxima actuación!".
+
+* En la pantalla "CreatePerformance" aparece un formulario para registrar una nueva actuación, para la que se pedirá el nombre del grupo y la fecha en la que tendrá lugar. Solo podrá haber una actuación por día. Todos los campos son obligatorios.
+
+* En la pantalla de "RestaurantDetail" aparecerá en su cabecera la información de las próximas actuaciones debajo de la información del restaurante, siempre que quede menos de una semana, ordenadas por proximidad temporal.
+
+### Ejercicio 1
+
+Realice todos los cambios necesarios en el proyecto de backend para implementar el nuevo requisito. Los test de backend esperan que haya una nueva ruta: `/performances` y que los campos de la tabla "Performances" sean "id", "group", "appointment" y "restaurantId". 
+
+Recuerde que puede correr los tests con:
+```Bash
+npm run test:backend
+```
+Céntrese en aquellos añadidos al archivo: `performances.test.js`.
+
+### Ejercicio 2
+
+Realice todos los cambios necesarios en el proyecto de frontend para implementar el nuevo requisito. Se sugieren los siguientes estilos:
+
+```Bash
+badge: {
+    textAlign: 'center',
+    borderWidth: 2,
+    paddingHorizontal: 10,
+    borderRadius: 10
+  }
+```
+
+```Bash
+emptyPerformanceList: {
+    textAlign: 'center',
+    fontSize: 15,
+    padding: 20,
+    color: 'white'
+  }
+```
+
+```Bash
+containerPerformance: {
+    padding: 20,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    flexDirection: 'column',
+    alignItems: 'center',
+    borderRadius: 10
+  }
+```
+
+## Aclaraciones:
+
+Para simplificar el desarrollo del examen de laboratorio, tenga en cuenta:
+* En el frontend, en la pantalla "CreatePerformance" el campo de fecha sigue el formato inglés por defecto, tal y como se observa en las capturas de pantalla. No es necesario cambiar este formato.
+
+Problemas de migración con otros proyectos de "DeliverUS":
+* El proyecto de este examen agrega una tabla nueva. Si **posteriormente al examen** vas a trabajar con otros proyectos de la asignatura, usando HeidiSQL debes borrar todas las tablas de la base de datos "DeliverUS" antes de ejecutar la migración del nuevo proyecto. Esto es debido a que las operaciones "db:create" y "db:drop" de Sequelize-cli no están disponibles para MariaDB.
+
+## Enlaces de ayuda:
+
+* https://sequelize.org/docs/v6/core-concepts/assocs/#special-methodsmixins-added-to-instances
+* https://sequelize.org/docs/v7/querying/operators/
+* https://express-validator.github.io/docs/api/validation-chain/#isdate
+* https://www.jsdocs.io/package/yup#date
+
+## Capturas de pantallas:
+
+Nótese que **la presentación y estilos de estas capturas deben ser fielmente reflejados en tu solución**: 
+
+<div style="display: grid; grid-template-columns: repeat(2, 50%); gap: 20px;">
+  <img src="docs/MyRestaurants.JPG" alt="List of restaurants" style="border: solid 2px #ccc; width: calc(100% - 20px);"/>
+  <img src="docs/RestaurantDetail-Performance.JPG" alt="Restaurant with performances" style="border: solid 2px #ccc; width: calc(100% - 20px);"/>
+  <img src="docs/RestaurantDetail-NoPerformance.JPG" alt="Restaurant without any performance" style="border: solid 2px #ccc; width: calc(100% - 20px);"/>
+  <img src="docs/CreatePerformance-BackendValidation.JPG" alt="New performance with validation error from backend" style="border: solid 2px #ccc; width: calc(100% - 20px);"/>
+  <img src="docs/CreatePerformance-FrontendValidation.JPG" alt="New performance with validation error from frontend" style="border: solid 2px #ccc; width: calc(100% - 20px);"/>
+</div>
 
 ## Proyecto base suministrado
 
 Este repositorio incluye el backend completo (carpeta `DeliverUS-Backend`) y el frontend de `owner` (carpeta `DeliverUS-Frontend-Owner`). Servirá como base para realizar el examen de laboratorio de la asignatura.
-
-## Enunciado
-
-Se requiere completar la funcionalidad para el usuario 'owner'. Para ello, vamos a permitir la visualización de las órdenes mediante un botón asociado a cada restaurante que el 'owner' posea. Implemente las modificaciones que se requieran de acuerdo a las siguientes imágenes:
-
-![Alt text](docs/listado.png "Listado de restaurantes con la inclusión del botón")
-
-En lo que se refiere al contenido de las vistas específicas para cada restaurante, debe aparecer un listado con un icono informativo del estado de la orden (incluidos en los assets del frontend como 'timer-sand.jpg', 'chef-hat.jpg', 'truck-delivery.jpg' y 'food.jpg'), acompañado de información básica de dicha orden: fecha de creación, total, dirección del envío e información del usuario (nombre y apellidos). El orden del listado será por status: primero 'pending', después 'in process', posteriormente 'sent' y finalmente, 'delivered'. A igualdad, se tomará la hora de creación como elemento de desempate. En la siguiente imagen se puede ver el diseño propuesto:
-
-![Alt text](docs/listado_botones.png "Listado de órdenes con la inclusión del botón next status y previous status")
-
-Nótese que queremos añadir la posibilidad de cambiar el status de la orden por parte del 'owner'. Para ello, se habilitará un botón que realizará el cambio entre estados consecutivos temporalmente. De la misma forma, se podrá deshacer la acción en los siguientes 5 minutos desde que se realizó el cambio para deshacer posibles errores del usuario owner (pasado los 5 minutos, las órdenes ya no podrán ser devueltas a su estado anterior). En cualquier caso, tras pulsar los botones, se debe cambiar la vista para actualizar la lista de órdenes y en el caso de que el status sea 'pending' o 'delivered', los botones que pasan al anterior o al posterior estado, respectivamente, no deben aparecer.
-
-Tenga en cuenta que:
-
-1. No se deben permitir de ninguna manera dos cambios de estados concurrentes.
-
-2. El cambio de estado viene definido por los valores de las fechas que se registran en las órdenes como se describe en el modelo:
-
-```javascript
-...
-getStatus () {
-      if (this.deliveredAt) { return 'delivered' }
-      if (this.sentAt) { return 'sent' }
-      if (this.startedAt) { return 'in process' }
-      return 'pending'
-    }
-...
-```
-
-3. Una orden sigue la siguiente secuencia: 'pending' -> 'in process' -> 'sent' -> 'delivered'
-
-4. Para simplificar el código, no tenga en cuenta las variaciones en las estadísticas extraídas en las operaciones analíticas referentes al cálculo del tiempo medio de servicio.
-
-5. Para obtener la diferencia entre fechas en minutos puede consultar el siguiente [enlace](https://www.geeksforgeeks.org/how-to-calculate-minutes-between-two-dates-in-javascript/).
-
-6. Tenga en cuenta que los botones de la vista asociados a cada orden, sólo deben aparecer si la operación forward o backward correspondiente es válida porque exista un estado válido al que volver o avanzar y en el caso de la operación backward, esté dentro del límite de tiempo de los 5 minutos.
 
 ## Preparación del entorno
 
@@ -75,6 +117,7 @@ getStatus () {
     npm run start:frontend:owner
     ```
 
+
 ## Depuración
 
 * Para **depurar el backend**, asegúrese de que **NO** existe una instancia en ejecución, pulse en el botón `Run and Debug` de la barra lateral, seleccione `Debug Backend` en la lista desplegable, y pulse el botón de *Play*.
@@ -88,12 +131,12 @@ getStatus () {
     ```Bash
     npm run test:backend
     ```
-
 **Advertencia: Los tests no pueden ser modificados.**
 
 ## Problemas con los puertos
 
 En ocasiones, los procesos de backend o frontend, con o sin depuración, pueden quedarse bloqueados sin liberar los puertos utilizados, impidiendo que puedan ejecutarse otros procesos. Se recomienda cerrar y volver a iniciar VSC para cerrar dichos procesos.
+
 
 ## Procedimiento de entrega
 
@@ -102,4 +145,4 @@ En ocasiones, los procesos de backend o frontend, con o sin depuración, pueden 
 1. Avisa al profesor antes de entregar.
 1. Cuando el profesor te dé el visto bueno, puedes subir el ZIP a la plataforma de Enseñanza Virtual. **Es muy importante esperar a que la plataforma te muestre un enlace al ZIP antes de pulsar el botón de enviar**. Se recomienda descargar ese ZIP para comprobar lo que se ha subido. Un vez realizada la comprobación, puedes enviar el examen.
   
-Si no se siguen estos pasos de manera escrupulosa, cabe la posibilidad de que no se entregue nada o que el ZIP contenga cualquier cosa.
+Si no se siguen estos pasos de manera escrupulosa, cabe la posibilidad de que no se entregue nada o que el ZIP contenga cualquier cosa. 
