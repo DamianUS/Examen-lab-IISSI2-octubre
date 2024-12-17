@@ -32,18 +32,6 @@ export default function RestaurantDetailScreen ({ navigation, route }) {
           </View>
         </ImageBackground>
 
-      {/* Solution */}
-        <View style={styles.containerPerformance}>
-          <FlatList
-            ListHeaderComponent={renderHeaderPerformances}
-            ListEmptyComponent={renderPerformancesEmptyList}
-            style={styles.containerPerformance}
-            data={restaurant?.performances}
-            renderItem={renderPerformance}
-            keyExtractor={item => item.id.toString()}
-          /> 
-        </View>
-
         <Pressable
           onPress={() => navigation.navigate('CreateProductScreen', { id: restaurant.id })
           }
@@ -65,21 +53,6 @@ export default function RestaurantDetailScreen ({ navigation, route }) {
       </View>
     )
   }
-
-  // Solution
-  const renderHeaderPerformances = () => {
-    return (
-      <>
-      {restaurant?.performances?.length !== 0 &&
-          <View>
-            <TextSemiBold style={styles.textTitle}>
-              Próximas actuaciones:
-            </TextSemiBold>
-          </View>       
-      }
-      </>
-    )  
-    }  
 
   const renderProduct = ({ item }) => {
     return (
@@ -134,33 +107,10 @@ export default function RestaurantDetailScreen ({ navigation, route }) {
     )
   }
 
-  // Solution 
-  const renderPerformance = ({ item }) => {
-    const appointment = new Date(item.appointment)
-    const semana = ["lunes","martes","miércoles","jueves","viernes","sábado","domingo"]
-    return (
-      <View>
-      <TextRegular textStyle={styles.description}>
-        {item.group} el próximo {semana[appointment.getDay()]}, {appointment.toLocaleDateString()} 
-        { /*a las {appointment.getHours().toString().padStart(2,"0")}:{appointment.getMinutes().toString().padStart(2,"0")} */ }
-      </TextRegular>
-    </View>
-    )
-  }
-
   const renderEmptyProductsList = () => {
     return (
       <TextRegular textStyle={styles.emptyList}>
         This restaurant has no products yet.
-      </TextRegular>
-    )
-  }
-
-  // Solution
-  const renderPerformancesEmptyList = () => {
-    return (
-      <TextRegular textStyle={styles.emptyPerformanceList}>
-        ¡No hay actuaciones en fechas próximas!
       </TextRegular>
     )
   }
@@ -238,14 +188,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center'
   },
-  // Solution
-  containerPerformance: {
-    padding: 20,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    flexDirection: 'column',
-    alignItems: 'center',
-    borderRadius: 10
-  },
   imageBackground: {
     flex: 1,
     resizeMode: 'cover',
@@ -266,13 +208,6 @@ const styles = StyleSheet.create({
   emptyList: {
     textAlign: 'center',
     padding: 50
-  },
-  // Solution
-  emptyPerformanceList: {
-    textAlign: 'center',
-    fontSize: 15,
-    padding: 20,
-    color: 'white'
   },
   button: {
     borderRadius: 8,
